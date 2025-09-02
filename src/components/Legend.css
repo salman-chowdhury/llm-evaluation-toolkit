@@ -197,6 +197,19 @@
   color: var(--color-text-secondary);
 }
 
+/* Page layout styles */
+.legend-content-only {
+  width: 100%;
+}
+
+.legend-content-only .legend-content {
+  padding: 0;
+}
+
+.legend-page-content .legend-content-only {
+  background: transparent;
+}
+
 /* Mobile responsive */
 @media (max-width: 640px) {
   .legend-button {

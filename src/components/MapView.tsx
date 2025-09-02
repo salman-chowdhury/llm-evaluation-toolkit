@@ -4,15 +4,11 @@ import { Map } from 'leaflet';
 import type { TrafficData, LayerSettings, SavedRoute, ReportIssue, Coordinates } from '../types';
 import { BRISBANE_WESTERN_SUBURBS, DEFAULT_ZOOM, MAP_CONFIG } from '../utils/constants';
 import { isEventInFuture } from '../utils/dateUtils';
-import { useRouteInsights } from '../hooks/useRouteInsights';
 import HotspotChips from './HotspotChips';
 import IncidentMarker from './IncidentMarker';
 import CameraMarker from './CameraMarker';
 import Legend, { LegendButton } from './Legend';
-import LayerToggles from './LayerToggles';
-import SavedRoutes from './SavedRoutes';
-import RouteInsights from './RouteInsights';
-import { ReportButton, useReportModal } from './ReportModal';
+import { useReportModal } from './ReportModal';
 import './MapView.css';
 
 interface MapViewProps {
@@ -41,10 +37,7 @@ const MapView: React.FC<MapViewProps> = ({
   const [mapLoaded, setMapLoaded] = useState(false);
   
   // Report modal
-  const { openModal, Modal } = useReportModal(onSubmitReport);
-  
-  // Generate AI insights for routes
-  const { insights, refreshInsights, isGenerating } = useRouteInsights(routes, trafficData);
+  const { Modal } = useReportModal(onSubmitReport);
   
   // Filter incidents based on settings
   const visibleIncidents = useMemo(() => {
@@ -130,24 +123,6 @@ const MapView: React.FC<MapViewProps> = ({
         </div>
       )}      
       <HotspotChips onHotspotClick={handleHotspotClick} />
-      <LayerToggles
-        settings={settings}
-        onSettingChange={onSettingChange}
-        trafficAvailable={false}
-      />
-      <SavedRoutes
-        routes={routes}
-        onAddRoute={onAddRoute}
-        onRemoveRoute={onRemoveRoute}
-        onRouteClick={handleRouteClick}
-      />
-      <RouteInsights
-        insights={insights}
-        routes={routes}
-        onRefresh={refreshInsights}
-        isGenerating={isGenerating}
-      />
-      <ReportButton onClick={openModal} />
       <LegendButton onClick={() => setLegendOpen(true)} />
       <Legend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
       <Modal />

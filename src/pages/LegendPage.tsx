@@ -7,8 +7,8 @@ const LegendPage = () => {
         <h1>Map Legend</h1>
         <p>Understanding map symbols</p>
       </div>
-      <div className="page-content">
-        <Legend isOpen={true} onClose={() => {}} />
+      <div className="page-content legend-page-content">
+        <Legend isOpen={true} onClose={() => {}} isPage={true} />
       </div>
     </div>
   );

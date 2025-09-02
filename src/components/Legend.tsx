@@ -5,9 +5,10 @@ import './Legend.css';
 interface LegendProps {
   isOpen: boolean;
   onClose: () => void;
+  isPage?: boolean; // When true, renders without modal overlay
 }
 
-const Legend: React.FC<LegendProps> = ({ isOpen, onClose }) => {
+const Legend: React.FC<LegendProps> = ({ isOpen, onClose, isPage = false }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -18,12 +19,12 @@ const Legend: React.FC<LegendProps> = ({ isOpen, onClose }) => {
   
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === 'Escape' && isOpen && !isPage) {
         onClose();
       }
     };
     
-    if (isOpen) {
+    if (isOpen && !isPage) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
     }
@@ -32,13 +33,13 @@ const Legend: React.FC<LegendProps> = ({ isOpen, onClose }) => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, isPage]);
   
   if (!isOpen) return null;
 
-  return (
-    <div className="legend-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="legend-title">
-      <div className="legend-modal" onClick={(e) => e.stopPropagation()} ref={modalRef} tabIndex={-1}>
+  const legendContent = (
+    <>
+      {!isPage && (
         <div className="legend-header">
           <h2 id="legend-title">Map Legend</h2>
           <button 
@@ -49,6 +50,7 @@ const Legend: React.FC<LegendProps> = ({ isOpen, onClose }) => {
             <X size={20} aria-hidden="true" />
           </button>
         </div>
+      )}
         
         <div className="legend-content">
           <div className="legend-section">
@@ -130,6 +132,23 @@ const Legend: React.FC<LegendProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
         </div>
+    </>
+  );
+
+  // Render as page content (no modal wrapper)
+  if (isPage) {
+    return (
+      <div className="legend-content-only">
+        {legendContent}
+      </div>
+    );
+  }
+
+  // Render as modal
+  return (
+    <div className="legend-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="legend-title">
+      <div className="legend-modal" onClick={(e) => e.stopPropagation()} ref={modalRef} tabIndex={-1}>
+        {legendContent}
       </div>
     </div>
   );

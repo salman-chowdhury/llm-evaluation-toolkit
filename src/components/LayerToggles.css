@@ -1,10 +1,6 @@
 .layer-toggles {
-  position: absolute;
-  top: var(--space-16);
-  right: var(--space-4);
-  z-index: var(--z-fixed);
-  min-width: 240px;
-  max-width: 320px;
+  width: 100%;
+  max-width: none;
 }
 
 .layer-toggles-header {
