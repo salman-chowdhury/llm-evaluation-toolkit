@@ -1,0 +1,6 @@
+#!/bin/sh
+b="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || echo "")"
+case "$b" in
+  main|web-v1) echo "❌ Committing on protected branch '$b' is blocked."; exit 1;;
+esac
+exit 0
