@@ -5,6 +5,7 @@ import type { TrafficData, LayerSettings, SavedRoute, ReportIssue, Coordinates }
 import { BRISBANE_WESTERN_SUBURBS, DEFAULT_ZOOM, MAP_CONFIG } from '../utils/constants';
 import { isEventInFuture } from '../utils/dateUtils';
 import HotspotChips from './HotspotChips';
+import RouteChips from './RouteChips';
 import IncidentMarker from './IncidentMarker';
 import CameraMarker from './CameraMarker';
 import Legend, { LegendButton } from './Legend';
@@ -123,6 +124,7 @@ const MapView: React.FC<MapViewProps> = ({
         </div>
       )}      
       <HotspotChips onHotspotClick={handleHotspotClick} />
+      <RouteChips routes={routes} onRouteClick={handleRouteClick} />
       <LegendButton onClick={() => setLegendOpen(true)} />
       <Legend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
       <Modal />

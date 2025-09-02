@@ -8,6 +8,7 @@ interface SavedRoutesProps {
   onAddRoute: (start: string, destination: string, name?: string) => SavedRoute;
   onRemoveRoute: (id: string) => void;
   onRouteClick?: (route: SavedRoute) => void;
+  defaultExpanded?: boolean;
 }
 
 interface AddRouteFormProps {
@@ -84,8 +85,9 @@ const SavedRoutes: React.FC<SavedRoutesProps> = ({
   onAddRoute,
   onRemoveRoute,
   onRouteClick,
+  defaultExpanded = false,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const handleAddRoute = (start: string, destination: string, name?: string) => {

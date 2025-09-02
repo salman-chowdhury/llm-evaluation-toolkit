@@ -15,6 +15,7 @@ const RoutesPage = () => {
           routes={routes}
           onAddRoute={addRoute}
           onRemoveRoute={removeRoute}
+          defaultExpanded={true}
         />
       </div>
     </div>
