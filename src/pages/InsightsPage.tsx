@@ -5,7 +5,7 @@ import { useRouteInsights } from '../hooks/useRouteInsights';
 
 const InsightsPage = () => {
   const { routes } = useRoutes();
-  const { data: trafficData } = useTrafficData();
+  const { data: trafficData, isDemo } = useTrafficData();
   const { insights, refreshInsights, isGenerating } = useRouteInsights(routes, trafficData);
 
   return (
@@ -13,6 +13,11 @@ const InsightsPage = () => {
       <div className="page-header">
         <h1>AI Route Insights</h1>
         <p>Smart analysis of your routes</p>
+        {isDemo && trafficData && (
+          <div className="demo-indicator">
+            <span>⚠️ Demo data active</span>
+          </div>
+        )}
       </div>
       <div className="page-content">
         <RouteInsights
@@ -20,6 +25,7 @@ const InsightsPage = () => {
           routes={routes}
           onRefresh={refreshInsights}
           isGenerating={isGenerating}
+          defaultExpanded={true}
         />
       </div>
     </div>

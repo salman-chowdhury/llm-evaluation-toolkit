@@ -10,6 +10,7 @@ interface RouteInsightsProps {
   routes: SavedRoute[];
   onRefresh: () => void;
   isGenerating: boolean;
+  defaultExpanded?: boolean;
 }
 
 const getSeverityColor = (severity: 'low' | 'medium' | 'high') => {
@@ -109,8 +110,9 @@ const RouteInsights: React.FC<RouteInsightsProps> = ({
   routes,
   onRefresh,
   isGenerating,
+  defaultExpanded = false,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   
   return (
     <div className="route-insights">
