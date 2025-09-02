@@ -1,0 +1,60 @@
+{
+  "generated_at": "2025-09-02T00:00:00Z",
+  "incidents": [
+    {
+      "id": "wrk-001",
+      "type": "roadworks",
+      "title": "Night works at Moggill Rd / Coonan St",
+      "status": "planned",
+      "start": "2025-09-03T20:00:00+10:00",
+      "end": "2025-09-04T05:00:00+10:00",
+      "lat": -27.4936,
+      "lng": 152.9766,
+      "description": "Lane closures and traffic delays expected during night construction work."
+    },
+    {
+      "id": "acc-002",
+      "type": "incident",
+      "title": "Minor crash near Toowong Roundabout",
+      "status": "active",
+      "start": "2025-09-02T08:30:00+10:00",
+      "lat": -27.4857,
+      "lng": 152.9921,
+      "description": "Minor vehicle collision causing delays in left lane."
+    },
+    {
+      "id": "wrk-003",
+      "type": "roadworks",
+      "title": "Indooroopilly Road resurfacing",
+      "status": "planned",
+      "start": "2025-09-04T09:00:00+10:00",
+      "end": "2025-09-06T17:00:00+10:00",
+      "lat": -27.5045,
+      "lng": 152.9750,
+      "description": "Road resurfacing works with single lane operation."
+    }
+  ],
+  "cameras": [
+    { 
+      "id": "cam-101", 
+      "type": "red_light", 
+      "lat": -27.4921, 
+      "lng": 152.9870,
+      "location": "Moggill Rd & Coonan St"
+    },
+    { 
+      "id": "cam-102", 
+      "type": "speed", 
+      "lat": -27.5044, 
+      "lng": 152.9755,
+      "location": "Indooroopilly Roundabout"
+    },
+    { 
+      "id": "cam-103", 
+      "type": "red_light", 
+      "lat": -27.4857, 
+      "lng": 152.9921,
+      "location": "Toowong Roundabout"
+    }
+  ]
+}

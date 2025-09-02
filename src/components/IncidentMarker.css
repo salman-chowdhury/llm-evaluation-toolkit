@@ -1,0 +1,169 @@
+/* Custom marker styles */
+.custom-marker-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  position: relative;
+}
+
+.custom-marker.incident {
+  background-color: var(--color-incident);
+}
+
+.custom-marker.roadworks {
+  background-color: var(--color-roadworks);
+}
+
+.custom-marker.closure {
+  background-color: var(--color-planned);
+}
+
+.custom-marker::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+/* Popup styles */
+.incident-popup .leaflet-popup-content-wrapper {
+  background: var(--glass-background);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-backdrop-filter);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: 0;
+  min-width: 280px;
+}
+
+.incident-popup .leaflet-popup-tip {
+  background: var(--glass-background);
+  border: 1px solid var(--glass-border);
+}
+
+.incident-popup-content {
+  padding: var(--space-4);
+}
+
+.incident-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.incident-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+  flex: 1;
+}
+
+.incident-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.status-icon {
+  flex-shrink: 0;
+}
+
+.status-icon.active {
+  color: var(--color-incident);
+}
+
+.status-icon.planned {
+  color: var(--color-warning);
+}
+
+.status-icon.resolved {
+  color: var(--color-success);
+}
+
+.status-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+.incident-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.incident-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.detail-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.detail-value {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  text-align: right;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .incident-popup .leaflet-popup-content-wrapper {
+    min-width: 240px;
+    max-width: 280px;
+  }
+  
+  .incident-popup-content {
+    padding: var(--space-3);
+  }
+  
+  .incident-title {
+    font-size: var(--font-size-base);
+  }
+  
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+  
+  .detail-value {
+    text-align: left;
+  }
+}
