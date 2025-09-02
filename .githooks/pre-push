@@ -1,16 +1,32 @@
+#!/bin/sh
+# Blocks pushes to protected branches and updates/deletes of v* tags.
+
 zero=0000000000000000000000000000000000000000
+
 PROTECTED_BRANCHES="refs/heads/main refs/heads/web-v1"
 PROTECTED_TAG_PREFIX="refs/tags/v"
+
 while read local_ref local_sha remote_ref remote_sha
 do
+  # Block pushes to protected branches
   for pb in $PROTECTED_BRANCHES; do
-    [ "$remote_ref" = "$pb" ] && { echo "❌ Push to $pb blocked. Use a feature branch + PR."; exit 1; }
+    if [ "$remote_ref" = "$pb" ]; then
+      echo "❌ Push to protected branch '$remote_ref' is blocked. Use a feature branch + PR."
+      exit 1
+    fi
   done
+
   case "$remote_ref" in
     $PROTECTED_TAG_PREFIX*)
-      [ "$local_sha" = "$zero" ] && { echo "❌ Deleting protected v* tag blocked."; exit 1; }
-      [ "$remote_sha" != "$zero" ] && { echo "❌ Updating protected v* tag blocked."; exit 1; }
+      if [ "$local_sha" = "$zero" ]; then
+        echo "❌ Deleting protected tag '${remote_ref#refs/tags/}' is blocked."
+        exit 1
+      elif [ "$remote_sha" != "$zero" ]; then
+        echo "❌ Updating protected tag '${remote_ref#refs/tags/}' is blocked (v* tags are immutable)."
+        exit 1
+      fi
       ;;
   esac
 done
+
 exit 0
