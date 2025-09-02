@@ -1,0 +1,16 @@
+zero=0000000000000000000000000000000000000000
+PROTECTED_BRANCHES="refs/heads/main refs/heads/web-v1"
+PROTECTED_TAG_PREFIX="refs/tags/v"
+while read local_ref local_sha remote_ref remote_sha
+do
+  for pb in $PROTECTED_BRANCHES; do
+    [ "$remote_ref" = "$pb" ] && { echo "❌ Push to $pb blocked. Use a feature branch + PR."; exit 1; }
+  done
+  case "$remote_ref" in
+    $PROTECTED_TAG_PREFIX*)
+      [ "$local_sha" = "$zero" ] && { echo "❌ Deleting protected v* tag blocked."; exit 1; }
+      [ "$remote_sha" != "$zero" ] && { echo "❌ Updating protected v* tag blocked."; exit 1; }
+      ;;
+  esac
+done
+exit 0
