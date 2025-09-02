@@ -1,36 +1,28 @@
 #!/bin/sh
 zero=0000000000000000000000000000000000000000
-PROTECTED_BRANCH_NAMES="main web-v1"
-PROTECTED_TAG_PREFIX="refs/tags/v"
-
-is_protected_ref () {
-  ref="$1"
-  for name in $PROTECTED_BRANCH_NAMES; do
-    [ "$ref" = "refs/heads/$name" ] && return 0
-    [ "$ref" = "$name" ] && return 0
-  done
-  return 1
-}
-
+NAMES="main web-v1"
+TAGP="refs/tags/v"
 blocked=0
-saw_input=0
-while read local_ref local_sha remote_ref remote_sha
+saw=0
+while read lref lsha rref rsha
 do
-  saw_input=1
-  is_protected_ref "$local_ref" && blocked=1
-  is_protected_ref "$remote_ref" && blocked=1
-  case "$remote_ref" in
-    $PROTECTED_TAG_PREFIX*)
-      [ "$local_sha" = "$zero" ] && blocked=1
-      [ "$remote_sha" != "$zero" ] && blocked=1
-      ;;
+  saw=1
+  for n in $NAMES; do
+    [ "$rref" = "refs/heads/$n" ] && blocked=1
+    [ "$lref" = "refs/heads/$n" ] && blocked=1
+  done
+  case "$rref" in
+    $TAGP*) [ "$lsha" = "$zero" ] && blocked=1; [ "$rsha" != "$zero" ] && blocked=1;;
   esac
 done
-
-current_branch="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || echo "")"
-for name in $PROTECTED_BRANCH_NAMES; do
-  [ "$current_branch" = "$name" ] && blocked=1
+cur="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || echo "")"
+for n in $NAMES; do
+  [ "$cur" = "$n" ] && blocked=1
 done
-
-[ $blocked -eq 0 ] || { echo "❌ Push blocked: protected refs (main/web-v1) or protected tags (v*)"; exit 1; }
+dest_ref="$(git rev-parse --symbolic-full-name @{push} 2>/dev/null || echo "")"
+dest_branch="$(echo "$dest_ref" | sed -E 's#^refs/remotes/[^/]+/##')"
+for n in $NAMES; do
+  [ "$dest_branch" = "$n" ] && blocked=1
+done
+[ $blocked -eq 0 ] || { echo "❌ Push blocked: protected branch/tag"; exit 1; }
 exit 0
