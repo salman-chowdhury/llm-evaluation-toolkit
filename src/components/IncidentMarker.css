@@ -50,7 +50,7 @@
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-xl);
   padding: 0;
-  min-width: 280px;
+  min-width: 260px;
 }
 
 .incident-popup .leaflet-popup-tip {
@@ -145,8 +145,8 @@
 /* Mobile responsive */
 @media (max-width: 640px) {
   .incident-popup .leaflet-popup-content-wrapper {
-    min-width: 240px;
-    max-width: 280px;
+    min-width: 220px;
+    max-width: 260px;
   }
   
   .incident-popup-content {
