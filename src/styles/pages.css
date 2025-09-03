@@ -275,6 +275,26 @@ textarea::placeholder {
 }
 
 /* Map page specific */
+.map-demo-indicator {
+  position: absolute;
+  top: var(--space-2);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-fixed);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: rgba(255, 193, 7, 0.9);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: var(--border-radius-base);
+  font-size: var(--font-size-xs);
+  color: #856404;
+  font-weight: var(--font-weight-medium);
+  backdrop-filter: blur(4px);
+}
+
+/* Map page specific */
 .page:has(.map-view) {
   padding: 0;
   padding-bottom: 80px;
@@ -325,5 +345,11 @@ textarea::placeholder {
   
   .page-header h1 {
     font-size: var(--font-size-xl);
+  }
+  
+  .map-demo-indicator {
+    top: var(--space-1);
+    font-size: 10px;
+    padding: 2px var(--space-2);
   }
 }

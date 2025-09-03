@@ -5,13 +5,18 @@ import { useRoutes } from '../hooks/useRoutes';
 import { useReports } from '../hooks/useReports';
 
 const MapPage = () => {
-  const { data: trafficData } = useTrafficData();
+  const { data: trafficData, isDemo } = useTrafficData();
   const { settings, updateSetting } = useSettings();
   const { routes, addRoute, removeRoute } = useRoutes();
   const { submitReport } = useReports();
 
   return (
     <div className="page">
+      {isDemo && trafficData && (
+        <div className="map-demo-indicator">
+          <span>⚠️ Demo data active</span>
+        </div>
+      )}
       <MapView 
         trafficData={trafficData} 
         settings={settings}
