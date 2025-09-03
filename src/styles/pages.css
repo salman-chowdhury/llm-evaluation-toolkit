@@ -295,14 +295,19 @@ textarea::placeholder {
 }
 
 /* Map page specific */
-.page:has(.map-view) {
+.map-page {
   padding: 0;
   padding-bottom: 80px;
+  height: 100vh;
 }
 
-.page:has(.map-view) .page-header,
-.page:has(.map-view) .page-content {
+.map-page .page-header,
+.map-page .page-content {
   display: none;
+}
+
+.map-page .map-view {
+  height: 100vh;
 }
 
 /* Desktop adjustments */
@@ -311,8 +316,9 @@ textarea::placeholder {
     padding-bottom: 0;
   }
   
-  .page:has(.map-view) {
+  .map-page {
     padding-bottom: 0;
+    height: 100vh;
   }
   
   .page-header {

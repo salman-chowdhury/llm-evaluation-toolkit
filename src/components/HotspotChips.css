@@ -1,10 +1,15 @@
 .hotspot-chips {
   position: absolute;
-  top: var(--space-4);
+  top: 60px; /* Account for demo banner height */
   left: var(--space-4);
   z-index: var(--z-fixed);
   min-width: 200px;
   max-width: 280px;
+}
+
+/* When demo banner is not present */
+body:not(.demo-banner-visible) .hotspot-chips {
+  top: var(--space-4);
 }
 
 .hotspot-chips-header {
@@ -71,11 +76,15 @@
 /* Mobile responsive */
 @media (max-width: 640px) {
   .hotspot-chips {
-    top: var(--space-3);
+    top: 50px; /* Account for demo banner on mobile */
     left: var(--space-3);
     right: var(--space-3);
     min-width: auto;
     max-width: none;
+  }
+  
+  body:not(.demo-banner-visible) .hotspot-chips {
+    top: var(--space-3);
   }
   
   .hotspot-chips-header {

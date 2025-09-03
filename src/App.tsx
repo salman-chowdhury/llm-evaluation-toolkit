@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MobileNav from './components/MobileNav';
 import DemoBanner from './components/DemoBanner';
@@ -25,6 +25,19 @@ function App() {
   const { isLoaded: routesLoaded } = useRoutes();
   const { isLoaded: reportsLoaded } = useReports();
   const [showDemoBanner, setShowDemoBanner] = useState(true);
+
+  // Add/remove body class for demo banner positioning
+  useEffect(() => {
+    if (isDemo && showDemoBanner) {
+      document.body.classList.add('demo-banner-visible');
+    } else {
+      document.body.classList.remove('demo-banner-visible');
+    }
+    
+    return () => {
+      document.body.classList.remove('demo-banner-visible');
+    };
+  }, [isDemo, showDemoBanner]);
 
   if (error) {
     return (

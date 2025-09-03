@@ -11,12 +11,7 @@ const MapPage = () => {
   const { submitReport } = useReports();
 
   return (
-    <div className="page">
-      {isDemo && trafficData && (
-        <div className="map-demo-indicator">
-          <span>⚠️ Demo data active</span>
-        </div>
-      )}
+    <div className="page map-page">
       <MapView 
         trafficData={trafficData} 
         settings={settings}
