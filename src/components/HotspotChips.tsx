@@ -20,6 +20,12 @@ const HotspotChips: React.FC<HotspotChipsProps> = ({ onHotspotClick }) => {
             key={hotspot.id}
             className="hotspot-chip"
             onClick={() => onHotspotClick(hotspot.coordinates.lat, hotspot.coordinates.lng)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onHotspotClick(hotspot.coordinates.lat, hotspot.coordinates.lng);
+              }
+            }}
             aria-label={`Navigate map to ${hotspot.name}`}
             role="listitem"
           >

@@ -23,7 +23,7 @@ const ReportPage = () => {
             lng: position.coords.longitude,
           });
         },
-        (error) => {
+        (_error) => {
           setLocationError('Unable to get your location. Please try using map center.');
         }
       );

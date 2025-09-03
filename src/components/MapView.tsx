@@ -27,10 +27,7 @@ const MapView: React.FC<MapViewProps> = ({
   className, 
   trafficData, 
   settings, 
-  onSettingChange, 
   routes, 
-  onAddRoute, 
-  onRemoveRoute,
   onSubmitReport 
 }) => {
   const mapRef = useRef<Map>(null);

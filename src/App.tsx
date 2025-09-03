@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MobileNav from './components/MobileNav';
 import DemoBanner from './components/DemoBanner';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useTrafficData } from './hooks/useTrafficData';
 import { useSettings } from './hooks/useSettings';
 import { useRoutes } from './hooks/useRoutes';
@@ -46,29 +47,31 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <div className="app">
-        {isDemo && showDemoBanner && (
-          <DemoBanner 
-            isVisible={true} 
-            onDismiss={() => setShowDemoBanner(false)} 
-          />
-        )}
-        
-        <main className="app-main">
-          <Routes>
-            <Route path="/" element={<MapPage />} />
-            <Route path="/toggles" element={<TogglesPage />} />
-            <Route path="/routes" element={<RoutesPage />} />
-            <Route path="/insights" element={<InsightsPage />} />
-            <Route path="/report" element={<ReportPage />} />
-            <Route path="/legend" element={<LegendPage />} />
-          </Routes>
-        </main>
-        
-        <MobileNav />
-      </div>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <div className="app">
+          {isDemo && showDemoBanner && (
+            <DemoBanner 
+              isVisible={true} 
+              onDismiss={() => setShowDemoBanner(false)} 
+            />
+          )}
+          
+          <main id="main-content" className="app-main" tabIndex={-1}>
+            <Routes>
+              <Route path="/" element={<MapPage />} />
+              <Route path="/toggles" element={<TogglesPage />} />
+              <Route path="/routes" element={<RoutesPage />} />
+              <Route path="/insights" element={<InsightsPage />} />
+              <Route path="/report" element={<ReportPage />} />
+              <Route path="/legend" element={<LegendPage />} />
+            </Routes>
+          </main>
+          
+          <MobileNav />
+        </div>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

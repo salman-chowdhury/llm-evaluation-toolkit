@@ -28,6 +28,12 @@ const RouteChips: React.FC<RouteChipsProps> = ({ routes, onRouteClick }) => {
             key={route.id}
             className="route-chip"
             onClick={() => onRouteClick(route)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onRouteClick(route);
+              }
+            }}
             aria-label={`Navigate to ${route.name}`}
             role="listitem"
           >
