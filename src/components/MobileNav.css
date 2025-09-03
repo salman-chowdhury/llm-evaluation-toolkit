@@ -49,19 +49,27 @@
   line-height: 1;
 }
 
-/* Add padding to body to account for fixed nav */
-body {
-  padding-bottom: 80px;
-}
+/* Mobile navigation styles */
 
-/* Desktop: hide mobile nav and remove padding */
+/* Desktop: keep mobile nav visible and adjust styling */
 @media (min-width: 768px) {
   .mobile-nav {
-    display: none;
+    /* Keep visible on desktop too */
+    padding: var(--space-3) var(--space-2);
   }
   
+  .mobile-nav-item {
+    padding: var(--space-3) var(--space-2);
+    min-height: 56px;
+  }
+  
+  .mobile-nav-label {
+    font-size: var(--font-size-sm);
+  }
+  
+  /* Keep body padding for navigation */
   body {
-    padding-bottom: 0;
+    padding-bottom: 80px;
   }
 }
 
