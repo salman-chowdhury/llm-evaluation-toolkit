@@ -1,5 +1,5 @@
-import React, { useRef, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
+import { MapContainer, TileLayer, ZoomControl, AttributionControl } from 'react-leaflet';
 import { Map } from 'leaflet';
 import type { TrafficData, LayerSettings, SavedRoute, ReportIssue, Coordinates } from '../types';
 import { BRISBANE_WESTERN_SUBURBS, DEFAULT_ZOOM, MAP_CONFIG } from '../utils/constants';
@@ -33,6 +33,29 @@ const MapView: React.FC<MapViewProps> = ({
   const mapRef = useRef<Map>(null);
   const [legendOpen, setLegendOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Track viewport size to adjust control positioning
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('matchMedia' in window)) return;
+    const mql = window.matchMedia('(max-width: 640px)');
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) => setIsMobile('matches' in e ? e.matches : (e as MediaQueryList).matches);
+    // Initialize
+    setIsMobile(mql.matches);
+    // Subscribe
+    if (mql.addEventListener) {
+      mql.addEventListener('change', onChange as (ev: MediaQueryListEvent) => void);
+      return () => mql.removeEventListener('change', onChange as (ev: MediaQueryListEvent) => void);
+    } else {
+      // Safari
+      // @ts-ignore - deprecated but for backward compatibility
+      mql.addListener(onChange);
+      return () => {
+        // @ts-ignore
+        mql.removeListener(onChange);
+      };
+    }
+  }, []);
   
   // Report modal
   const { Modal } = useReportModal(onSubmitReport);
@@ -89,7 +112,9 @@ const MapView: React.FC<MapViewProps> = ({
         zoom={DEFAULT_ZOOM}
         style={{ height: '100%', width: '100%' }}
         ref={mapRef}
-        attributionControl={true}
+        // Disable default attribution so we can control order
+        attributionControl={false}
+        // Disable default control; we render our own positioned one
         zoomControl={false}
         whenReady={() => setMapLoaded(true)}
       >
@@ -99,7 +124,11 @@ const MapView: React.FC<MapViewProps> = ({
           maxZoom={MAP_CONFIG.maxZoom}
           minZoom={MAP_CONFIG.minZoom}
         />
+
+        {/* Explicit zoom control; top-right on all, CSS centers on mobile */}
         <ZoomControl position="topright" />
+        {/* Add attribution explicitly after zoom so it stays below in bottom-right corner */}
+        <AttributionControl position="bottomright" />
         
         {/* Render incident markers */}
         {visibleIncidents.map((incident) => (

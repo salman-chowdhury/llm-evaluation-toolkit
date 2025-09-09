@@ -1,6 +1,6 @@
 .map-view {
   position: relative;
-  height: calc(100vh - 80px); /* Account for bottom navigation */
+  height: 100%;
   width: 100%;
 }
 
@@ -8,6 +8,14 @@
   background: var(--color-surface);
   height: 100%;
   width: 100%;
+}
+
+/* Ensure Leaflet control containers stack above map overlays */
+.map-view .leaflet-top,
+.map-view .leaflet-right,
+.map-view .leaflet-bottom,
+.map-view .leaflet-left {
+  z-index: calc(var(--z-fixed) + 100);
 }
 
 .map-loading {
@@ -51,15 +59,21 @@
   margin: 0;
 }
 
-/* Custom zoom controls positioning */
+/* Style default zoom controls */
 .map-view .leaflet-control-zoom {
   position: absolute;
   top: var(--space-6);
   right: var(--space-4);
-  z-index: var(--z-fixed);
+  z-index: calc(var(--z-fixed) + 100); /* Ensure it's above other elements */
 }
 
-.map-view .leaflet-control-zoom a {
+/* When demo banner is visible, push controls further down (desktop) */
+body.demo-banner-visible .map-view .leaflet-control-zoom {
+  top: calc(var(--space-12) + var(--space-2));
+}
+
+.map-view .leaflet-control-zoom-in,
+.map-view .leaflet-control-zoom-out {
   background: var(--glass-background);
   border: 1px solid var(--glass-border);
   backdrop-filter: var(--glass-backdrop-filter);
@@ -70,18 +84,22 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   transition: var(--transition-colors);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.map-view .leaflet-control-zoom a:hover {
+.map-view .leaflet-control-zoom-in:hover,
+.map-view .leaflet-control-zoom-out:hover {
   background: var(--color-surface-elevated);
   border-color: var(--color-border);
 }
 
-.map-view .leaflet-control-zoom a:first-child {
+.map-view .leaflet-control-zoom-in {
   border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
 }
 
-.map-view .leaflet-control-zoom a:last-child {
+.map-view .leaflet-control-zoom-out {
   border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
   border-top: none;
 }
@@ -104,12 +122,51 @@
 
 /* Mobile responsive */
 @media (max-width: 640px) {
-  .map-view .leaflet-control-zoom {
-    top: var(--space-4);
-    right: var(--space-3);
+  /* Use the top-right corner as a full-height column and center the zoom vertically */
+  .map-view .leaflet-top.leaflet-right {
+    top: 0;
+    bottom: 0; /* stretch to full height */
+    right: calc(var(--space-3) + env(safe-area-inset-right, 0px));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end; /* anchor children near bottom */
+    pointer-events: none; /* allow clicks to pass except on controls */
   }
-  
-  .map-view .leaflet-control-zoom a {
+  .map-view .leaflet-top.leaflet-right .leaflet-control {
+    pointer-events: auto;
+  }
+
+  /* Place zoom near bottom-right, safely above attribution */
+  .map-view .leaflet-control-zoom {
+    position: relative;
+    top: auto !important;
+    right: auto;
+    transform: none;
+    margin-bottom: 72px; /* adjust this gap to taste */
+  }
+
+  /* When controls are rendered in bottom-right, keep them above the mobile nav */
+  .map-view .leaflet-bottom.leaflet-right {
+    /* Pin attribution to absolute bottom-right while respecting safe area */
+    margin-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-2));
+    margin-right: calc(var(--space-3) + env(safe-area-inset-right, 0px));
+    z-index: calc(var(--z-fixed) + 100);
+  }
+
+  /* Force zoom to sit higher than attribution regardless of DOM order */
+  .map-view .leaflet-bottom.leaflet-right .leaflet-control-zoom {
+    margin-bottom: 44px; /* leave room for attribution below */
+    z-index: calc(var(--z-fixed) + 110);
+  }
+  .map-view .leaflet-bottom.leaflet-right .leaflet-control-attribution {
+    margin-bottom: 0; /* keep attribution closest to bottom edge */
+    float: right; /* ensure it stays on the right under zoom */
+    z-index: calc(var(--z-fixed) + 100);
+  }
+
+  .map-view .leaflet-control-zoom-in,
+  .map-view .leaflet-control-zoom-out {
     width: 32px;
     height: 32px;
     line-height: 30px;
