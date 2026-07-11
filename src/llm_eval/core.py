@@ -22,6 +22,10 @@ class EvaluationRecord:
     cited_document_ids: tuple[str, ...]
     latency_ms: float
     estimated_cost_usd: float
+    expected_refusal: bool = False
+    refused: bool = False
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
 
 
 def tokenize(text: str) -> set[str]:
@@ -74,6 +78,10 @@ def unsupported_token_ratio(record: EvaluationRecord) -> float:
     return 1 - grounding_overlap(record)
 
 
+def refusal_correctness(record: EvaluationRecord) -> float:
+    return float(record.expected_refusal == record.refused)
+
+
 def evaluate_record(record: EvaluationRecord) -> dict[str, float | str]:
     return {
         "id": record.id,
@@ -84,8 +92,11 @@ def evaluate_record(record: EvaluationRecord) -> dict[str, float | str]:
         "citation_coverage": round(citation_coverage(record), 4),
         "grounding_overlap": round(grounding_overlap(record), 4),
         "unsupported_token_ratio": round(unsupported_token_ratio(record), 4),
+        "refusal_correctness": refusal_correctness(record),
         "latency_ms": round(record.latency_ms, 2),
         "estimated_cost_usd": round(record.estimated_cost_usd, 6),
+        "prompt_tokens": record.prompt_tokens,
+        "completion_tokens": record.completion_tokens,
     }
 
 
@@ -111,6 +122,7 @@ def summarise(rows: list[dict[str, float | str]]) -> dict[str, float | int]:
         "citation_coverage",
         "grounding_overlap",
         "unsupported_token_ratio",
+        "refusal_correctness",
     ]
     summary: dict[str, float | int] = {"records": len(rows)}
     for metric in metric_names:
@@ -122,6 +134,8 @@ def summarise(rows: list[dict[str, float | str]]) -> dict[str, float | int]:
     summary["total_estimated_cost_usd"] = round(
         sum(float(row["estimated_cost_usd"]) for row in rows), 6
     )
+    summary["total_prompt_tokens"] = sum(int(row["prompt_tokens"]) for row in rows)
+    summary["total_completion_tokens"] = sum(int(row["completion_tokens"]) for row in rows)
     return summary
 
 
@@ -143,6 +157,10 @@ def load_jsonl(path: Path) -> list[EvaluationRecord]:
                     cited_document_ids=tuple(map(str, payload.get("cited_document_ids", []))),
                     latency_ms=float(payload.get("latency_ms", 0)),
                     estimated_cost_usd=float(payload.get("estimated_cost_usd", 0)),
+                    expected_refusal=bool(payload.get("expected_refusal", False)),
+                    refused=bool(payload.get("refused", False)),
+                    prompt_tokens=int(payload.get("prompt_tokens", 0)),
+                    completion_tokens=int(payload.get("completion_tokens", 0)),
                 )
             )
         except (KeyError, TypeError, ValueError) as exc:

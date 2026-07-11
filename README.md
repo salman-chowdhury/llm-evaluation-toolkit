@@ -17,8 +17,9 @@ It is designed to work without paid APIs. Any system can write evaluation record
 - Citation/source coverage
 - Grounding overlap between the answer and retrieved evidence
 - Unsupported-token ratio
+- Refusal correctness for answerable and unanswerable cases
 - Latency percentiles
-- Estimated cost aggregation
+- Observed prompt/completion token totals and estimated cost aggregation
 
 These lexical metrics are intentionally transparent baselines. They do not replace human review or model-based judging, but they provide a stable foundation for comparing system changes.
 
@@ -39,9 +40,15 @@ Each JSONL row represents one evaluated request:
   ],
   "cited_document_ids": ["doc-1"],
   "latency_ms": 420,
-  "estimated_cost_usd": 0.0012
+  "estimated_cost_usd": 0.0012,
+  "expected_refusal": false,
+  "refused": false,
+  "prompt_tokens": 120,
+  "completion_tokens": 32
 }
 ```
+
+The refusal and token fields are optional and default to `false`/`0`, so older datasets remain valid. Use zero token and cost values when the evaluated provider does not expose usage; do not infer provider billing from string length.
 
 ## Usage
 

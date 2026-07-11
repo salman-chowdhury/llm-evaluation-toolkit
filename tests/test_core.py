@@ -8,6 +8,8 @@ from llm_eval.core import (
     precision_at_k,
     recall_at_k,
     reciprocal_rank,
+    refusal_correctness,
+    summarise,
 )
 
 
@@ -39,6 +41,44 @@ def test_grounding_and_citations() -> None:
     item = record()
     assert grounding_overlap(item) == 1.0
     assert citation_coverage(item) == 1.0
+
+
+def test_refusal_and_usage_metrics() -> None:
+    refused = EvaluationRecord(
+        id="q2",
+        question="Unknown?",
+        reference_answer="The source does not answer this question.",
+        answer="I could not find that in the sources.",
+        relevant_document_ids=(),
+        retrieved_documents=(),
+        cited_document_ids=(),
+        latency_ms=25,
+        estimated_cost_usd=0,
+        expected_refusal=True,
+        refused=True,
+        prompt_tokens=12,
+        completion_tokens=8,
+    )
+    assert refusal_correctness(refused) == 1.0
+    summary = summarise([
+        {
+            "id": "q2",
+            "precision_at_5": 0.0,
+            "recall_at_5": 0.0,
+            "reciprocal_rank": 0.0,
+            "answer_coverage": 0.0,
+            "citation_coverage": 0.0,
+            "grounding_overlap": 0.0,
+            "unsupported_token_ratio": 1.0,
+            "refusal_correctness": 1.0,
+            "latency_ms": 25.0,
+            "estimated_cost_usd": 0.0,
+            "prompt_tokens": 12,
+            "completion_tokens": 8,
+        }
+    ])
+    assert summary["total_prompt_tokens"] == 12
+    assert summary["total_completion_tokens"] == 8
 
 
 def test_cli_writes_reports(tmp_path: Path) -> None:
