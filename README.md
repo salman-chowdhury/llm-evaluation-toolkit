@@ -23,6 +23,8 @@ It is designed to work without paid APIs. Any system can write evaluation record
 
 These lexical metrics are intentionally transparent baselines. They do not replace human review or model-based judging, but they provide a stable foundation for comparing system changes.
 
+[Case study: architecture, measured validation, trade-offs, and limitations](docs/case-study.md)
+
 ## Input format
 
 Each JSONL row represents one evaluated request:
