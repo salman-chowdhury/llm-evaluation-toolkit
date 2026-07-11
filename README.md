@@ -84,7 +84,3 @@ This project demonstrates:
 - bootstrap confidence intervals
 - experiment comparison and regression thresholds
 - OpenTelemetry trace ingestion
-
-## Repository name
-
-This repository was a near-empty placeholder. Rename it to `llm-evaluation-toolkit` when repository settings are available.
